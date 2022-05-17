@@ -4,7 +4,8 @@
 <div class="container">
     <h1>Sign up</h1>
 
-    <form action="">
+    <form action="/accounts/signup/" method="POST">
+        {% csrf_token %}
         Username:
         <br>
         <input name="username" type="text">
