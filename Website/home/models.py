@@ -7,4 +7,6 @@ class Home(models.Model):
     serving = models.IntegerField()
     cnt = models.IntegerField()
     cluster = models.IntegerField()
-    
+
+class Ingredient(models.Model):
+    ingredients = models.TextField()
