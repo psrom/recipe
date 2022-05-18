@@ -8,6 +8,7 @@ class Home(models.Model):
     serving = models.IntegerField()
     cnt = models.IntegerField()
     cluster = models.IntegerField()
+
     
     def __str__(self):
         return self.name
@@ -18,5 +19,3 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.ingredients
     
-
-
