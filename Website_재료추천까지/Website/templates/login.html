@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+
+<div class="container">
+    <h1>Login</h1>
+
+    {% if error %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{error.message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    
+    <form action="/accounts/login/" method="POST">
+        {% csrf_token %}
+        Username:
+        <br>
+        <input name="username" type="text">
+        <br>
+        Password:
+        <br>
+        <input name="password" type="password">
+        <br><br>
+        <input type="submit" class="btn btn-primary" value="sign in">
+    </form>
+</div>
+
+{% endblock %}
