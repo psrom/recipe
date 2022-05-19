@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns=[
     path('', views.index, name='index'),
-    path('api/ingredient/', views.ingredientsjson, name='ingredient_json')
+    path('api/ingredient/', views.ingredientsjson, name='ingredient_json'),
+    path('ing_rec/', views.rec, name = 'ingre'),
 ]
