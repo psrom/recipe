@@ -42,29 +42,17 @@ from home.models import *
 #                 ))
 #     Home.objects.bulk_create(bulk_list)
 
-# CSV_PATH = 'C:\\Users\\gkdle\\OneDrive\\바탕 화면\\냉장고를 부탁해조\\jhjh\Website\\ingred.csv' 
+# CSV_PATH = 'C:/Users/user/Desktop/project_cooking/Website/ingred.csv' 
 
 # with open(CSV_PATH, newline='',encoding='UTF-8') as csvfile: 
 #     data_reader = csv.DictReader(csvfile) 
  
-    # bulk_list = []
-    # for row in data_reader:
-    #     bulk_list.append(Ingredient(
-    #             ingredients=row['0'],
-    #             ))
-    # Ingredient.objects.bulk_create(bulk_list)
-
-
-
-
-
-
-
-# for i in range(1,19):
-#     row = Home.objects.get(pk=i)
-#     row.delete()
-
-
+#     bulk_list = []
+#     for row in data_reader:
+#         bulk_list.append(Ingredient(
+#                 ingredients=row['0'],
+#                 ))
+#     Ingredient.objects.bulk_create(bulk_list)
 
 
 
