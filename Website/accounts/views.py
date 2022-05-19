@@ -32,7 +32,7 @@ def login(request):
             auth.login(request, user)
             return redirect('index')
         else:
-            return render(request, 'login.html', {'error':'ID, 비밀번호를 다시 확인해주세요.'})
+            return render(request, 'login.html', {"error":{"message":"아이디, 비밀번호를 다시 확인해주세요."}})
     else:
         return render(request, 'login.html')
 
