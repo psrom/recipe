@@ -9,42 +9,42 @@ import math
 
 
 #lst_a
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/lst_a.p', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/lst_a.p', 'rb') as f:
   lst_a = pickle.load(f)
   
 #title
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/title.p', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/title.p', 'rb') as f:
   title = pickle.load(f)
 
 #word2vec 불러오기
-model = gensim.models.Word2Vec.load('C:/Users/user/Desktop/밀화부리/mysite/model_data/wvrecipe')
+model = gensim.models.Word2Vec.load('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/wvrecipe')
 
 #co-occurrence matrix 불러오기
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/ingredients_co.p', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/ingredients_co.p', 'rb') as f:
   data_matrix = pickle.load(f)
 
 
 #name_matrix 불러오기
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/name_matrix.p', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/name_matrix.p', 'rb') as f:
   name_matrix = pickle.load(f)
 
 
 #sim_matrix 불러오기
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/sim_matrix.p', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/sim_matrix.p', 'rb') as f:
   sim_matrix = pickle.load(f)
 
 
 #r_v 불러오기
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/r_v.p', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/r_v.p', 'rb') as f:
   r_v = pickle.load(f)
 
 #재료 카테고리
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/ingredients_list', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/ingredients_list', 'rb') as f:
   ingredients_list = pickle.load(f)
 
 
 #tfidf 불러오기
-with open ('C:/Users/user/Desktop/밀화부리/mysite/model_data/tfidf.p', 'rb') as f:
+with open ('C:/Users/silvi/Desktop/web/web_test4/Website/model_data/tfidf.p', 'rb') as f:
   tfidf_v = pickle.load(f)
 
 

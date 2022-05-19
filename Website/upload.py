@@ -7,9 +7,9 @@ django.setup()
 
 from home.models import *
 
-# # python manage.py dbshell
-# # drop table 이름
-# # delete from django_migrations where app = 'home'
+#python manage.py dbshell
+#drop table 이름
+#delete from django_migrations where app = 'home'
 
 # ##########일반적인 방법
 # CSV_PATH = 'C:/Users/user/Desktop/밀화부리/mysite/ko.csv' 
@@ -22,9 +22,9 @@ from home.models import *
 
 
 
-####벌크업데이트
+# ####벌크업데이트
 
-# CSV_PATH = 'C:\\Users\\gkdle\\OneDrive\\바탕 화면\\냉장고를 부탁해조\\jhjh\Website\\final_recipe_df.csv' 
+# CSV_PATH = 'C:/Users/silvi/Desktop/web_test3/Website/final_recipe_df.csv' 
 
 # with open(CSV_PATH, newline='',encoding='UTF-8') as csvfile: 
 #     data_reader = csv.DictReader(csvfile) 
@@ -42,17 +42,30 @@ from home.models import *
 #                 ))
 #     Home.objects.bulk_create(bulk_list)
 
-# CSV_PATH = 'C:/Users/user/Desktop/project_cooking/Website/ingred.csv' 
 
-# with open(CSV_PATH, newline='',encoding='UTF-8') as csvfile: 
-#     data_reader = csv.DictReader(csvfile) 
+CSV_PATH = 'C:/Users/silvi/Desktop/web_test3/Website/ingred.csv' 
+
+with open(CSV_PATH, newline='',encoding='UTF-8') as csvfile: 
+    data_reader = csv.DictReader(csvfile) 
  
-#     bulk_list = []
-#     for row in data_reader:
-#         bulk_list.append(Ingredient(
-#                 ingredients=row['0'],
-#                 ))
-#     Ingredient.objects.bulk_create(bulk_list)
+    bulk_list = []
+    for row in data_reader:
+        bulk_list.append(Ingredient(
+                ingredients=row['0'],
+                ))
+    Ingredient.objects.bulk_create(bulk_list)
+
+
+
+
+
+
+
+# for i in range(1,19):
+#     row = Home.objects.get(pk=i)
+#     row.delete()
+
+
 
 
 

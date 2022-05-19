@@ -4,6 +4,9 @@
 
 
 Website/model_data/
+
+Website/recipe_model
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
