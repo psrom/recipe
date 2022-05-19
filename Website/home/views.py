@@ -10,7 +10,6 @@ from recipe_model import *
 # Create your views here.
 def index(request):
     print(request.user)
-
     return render(request, 'index.html')
 
 def login(request):
@@ -21,7 +20,6 @@ def signup(request):
     if request.method == 'POST':
         return render(request, 'signup.html')
 
-
 def ingredientsjson(request):
     if not request.GET.get('ingredient'):
         ingredient = Ingredient.objects.all()
@@ -30,7 +28,6 @@ def ingredientsjson(request):
         ingredient = Ingredient.objects.filter(ingredients__startswith=request.GET['ingredient']).all()
 
     return HttpResponse(serialize('json', queryset=ingredient))
-
 
 # def personToDictionary(person):
 #     if person == None:

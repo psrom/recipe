@@ -5,6 +5,13 @@
 <div class="container">
     <h1>Login</h1>
 
+    {% if error %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{error.message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    
     <form action="/accounts/login/" method="POST">
         {% csrf_token %}
         Username:
