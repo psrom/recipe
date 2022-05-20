@@ -85,6 +85,7 @@
         <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
         <script>
+            var baseUrl = window.location.origin;
             var input = document.querySelector('input#sample'),
                 // init Tagify script on the above inputs
                 tagify = new Tagify(input, {
@@ -136,7 +137,7 @@
                 }).join(',')
                 console.log(suggest_ingredient)
 
-                fetch('http://127.0.0.1:8000/ing_rec/?ingre=' + suggest_ingredient )
+                fetch(baseUrl+'/ing_rec/?ingre=' + suggest_ingredient )
                             .then(result => result.json())
                             .then(function (data) {
                                 
@@ -173,7 +174,7 @@
             }
 
             function getIngrementByText(text) {
-                return fetch("http://127.0.0.1:8000/api/ingredient/?ingredient=" + text);
+                return fetch(baseUrl+"/api/ingredient/?ingredient=" + text);
             }
 
 

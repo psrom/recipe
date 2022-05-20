@@ -8,6 +8,7 @@ from .models import Home
 from recipe_model import *
 import requests
 from bs4 import BeautifulSoup
+
 # Create your views here.
 def index(request):
     print(request.user)
