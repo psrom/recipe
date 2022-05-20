@@ -4,9 +4,10 @@ from django.core.serializers import serialize
 from django.http import HttpResponseNotFound
 from regex import D # 404 error
 from .models import Ingredient
-
+from .models import Home
 from recipe_model import *
-
+import requests
+from bs4 import BeautifulSoup
 # Create your views here.
 def index(request):
     print(request.user)
@@ -83,7 +84,62 @@ def rec(request):
         print("-"*10)
         print(result)
         print(result_lst)
-    return HttpResponse(json.dumps({'result':result, 'jar':jar}), content_type="application/json")
+    return HttpResponse(json.dumps({'result':result, 'jar':round(jar,3)}), content_type="application/json")
     
 
     # return render(request, 'index.html', {'result':result, 'jar':round(jar,3), 'list':i})
+
+
+
+
+
+
+def recipe_rec(request):
+    
+    
+    lst = [i['value'] for i in eval(request.GET.get('input-custom-dropdown'))]
+    print(lst)
+    input_lst = Recipe_rec(lst)
+
+    max_idx = input_lst.cosin_m(n = 100, p = True)
+
+    n10 = input_lst.rec_result(max_idx, n = 8)
+    
+    
+    recc = [Home.objects.get(id = i+1) for i in n10]
+    print(recc)
+    
+    url = [i.url for i in recc]
+    image_url = []
+    for i in url:
+        res = requests.get(i)
+        soup = BeautifulSoup(res.content, 'html.parser')
+
+
+        if '10000recipe' in i:
+            image = soup.find('div', 'centeredcrop').find('img')['src']
+            image_url.append(image)
+        elif 'haemukja' in i:
+            if soup.find('div', 'flexslider') != None:
+
+                image = soup.find('div', 'flexslider').find_all('img')[0]['src']
+                image_url.append(image)
+            else:    
+                image = soup.find('ol','lst_step').find_all('div', 'img-cover')[-1].find('img')['src']
+                image_url.append(image)    
+
+        else:
+            image = 'https://wtable.co.kr'+soup.find('div', style = "display:inline-block;max-width:100%;overflow:hidden;position:relative;box-sizing:border-box;margin:0").find_all('img')[1]['src']
+            image_url.append(image)
+
+    context = []
+    for i in range(len(image_url)):
+        dic = {}
+        dic['name'] =recc[i].name
+        dic['ingredients'] = recc[i].ingredients
+        dic['url'] = recc[i].url
+        dic['img_url'] = image_url[i]
+        context.append(dic) 
+
+    print(context)            
+    return render(request, 'index.html', {'context':context, 'lst':lst})
