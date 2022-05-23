@@ -1,17 +1,22 @@
+
 import gensim
 import numpy as np
 import pandas as pd
 import pickle
 from numpy import dot
 from numpy.linalg import norm
-import math
-#pip install scikit-learn==1.0.2    
+from numba import jit
+import datetime
 
+
+start1 = datetime.datetime.now()
+#pip install scikit-learn==1.0.2    
 
 #lst_a
 with open ('./model_data/lst_a.p', 'rb') as f:
-  lst_a = pickle.load(f)
   
+  lst_a = pickle.load(f)
+   
 #title
 with open ('./model_data/title.p', 'rb') as f:
   title = pickle.load(f)
@@ -34,10 +39,6 @@ with open ('./model_data/sim_matrix.p', 'rb') as f:
   sim_matrix = pickle.load(f)
 
 
-#r_v 불러오기
-with open ('./model_data/r_v.p', 'rb') as f:
-  r_v = pickle.load(f)
-
 #재료 카테고리
 with open ('./model_data/ingredients_list', 'rb') as f:
   ingredients_list = pickle.load(f)
@@ -47,7 +48,15 @@ with open ('./model_data/ingredients_list', 'rb') as f:
 with open ('./model_data/tfidf.p', 'rb') as f:
   tfidf_v = pickle.load(f)
 
+#r_v 불러오기
+with open ('./model_data/r_v.p', 'rb') as f:
+   
+  r_v = pickle.load(f)
 
+
+#########################
+
+@jit(nopython = True)
 def cos_sim(A, B):
   return dot(A, B)/(norm(A)*norm(B))
 
@@ -72,7 +81,6 @@ def jaccard(lst_s, lst_c):
   num = (sum(res)/len(res))
   n = len(lst_s)
   return (n*num-1)/(n-1)
-
 
 
 class Recipe_rec:
@@ -112,6 +120,7 @@ class Recipe_rec:
 
     return self.max_idx
 
+  
   def rec_result(self,max_idx, n = 10):
     self.n = n
     self.max_idx = max_idx
@@ -152,14 +161,15 @@ class Recipe_rec:
 
     return self.n10
 
+
 class Ing_rec():
   def __init__(self, lst):
     self.lst = lst
 
-  def rec(self, number = 5):
+  
+  def rec(self):
     lst = self.lst
-    self.number = number
-    cnt = len(lst)
+    
     rec_dic = dict(zip(ingredients_list.keys(),[[],[],[],[],[],[],[],[]]))
 
     ing_co_matrix = data_matrix.copy()
@@ -168,7 +178,7 @@ class Ing_rec():
     for i in lst:
       ing_co_matrix2 *= ing_co_matrix[i]
 
-    cc = list(ing_co_matrix2[ing_co_matrix2 > self.number**cnt].nlargest(20).index)
+    cc = list(ing_co_matrix2.nlargest(20).index)
     for j in cc:
       for i in ingredients_list.keys():
         if j in ingredients_list[i]:
@@ -181,4 +191,25 @@ class Ing_rec():
     else:
       jac = 1
     return jac, rec_dic
+
+end1 = datetime.datetime.now()
+
+print('로딩시간:{}'.format(end1-start1))
+
+#####처음 컴파일용
+
+# test = ['소고기']
+# a = Recipe_rec(test)
+# start = datetime.datetime.now()
+
+# max_idx = a.cosin_m()
+# result = a.rec_result(max_idx)
+# end = datetime.datetime.now()
+
+# print(end-start)
+
+
+
+
+
 

@@ -22,9 +22,9 @@ from home.models import *
 
 
 
-# ####벌크업데이트
+####벌크업데이트
 
-# CSV_PATH = 'C:/Users/silvi/Desktop/web_test3/Website/final_recipe_df.csv' 
+# CSV_PATH = './final_recipe_df.csv' 
 
 # with open(CSV_PATH, newline='',encoding='UTF-8') as csvfile: 
 #     data_reader = csv.DictReader(csvfile) 
@@ -43,7 +43,7 @@ from home.models import *
 #     Home.objects.bulk_create(bulk_list)
 
 
-CSV_PATH = 'C:/Users/silvi/Desktop/web_test3/Website/ingred.csv' 
+CSV_PATH = './ingred.csv' 
 
 with open(CSV_PATH, newline='',encoding='UTF-8') as csvfile: 
     data_reader = csv.DictReader(csvfile) 
