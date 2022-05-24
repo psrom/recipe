@@ -5,6 +5,7 @@ from django.http import HttpResponseNotFound
 from regex import D # 404 error
 from .models import Ingredient
 from .models import Home
+from accounts.models import Hate_Ingredient
 from recipe_model import *
 import requests
 from bs4 import BeautifulSoup
@@ -98,20 +99,42 @@ def rec(request):
 
 
 def recipe_rec(request):
+    print(request.user.id)
+    id = Hate_Ingredient.objects.filter(user_id = request.user.id).values('ingredient_id')
     
+    e = [Ingredient.objects.get(id = i['ingredient_id']) for i in id]
     
+    hate = [i.ingredients for i in e]
+    print(hate)
+
     lst = [i['value'] for i in eval(request.GET.get('input-custom-dropdown'))]
     print(lst)
     input_lst = Recipe_rec(lst)
 
-    max_idx = input_lst.cosin_m(n = 100, p = True)
+    max_idx = input_lst.cosin_m(n = 250, p = True)
+   
+    max_idx_ing = [eval(Home.objects.get(id = i+1).ingredients_pre) for i in max_idx]
+    
+    print(len(max_idx))
+    idx = [] 
+    for i in hate:
+        for j in range(len(max_idx_ing)):
+            if i in max_idx_ing[j]:
+                idx.append(j)
+    idx = list(set(idx))            
+    print(sorted(idx, reverse=True))
+    for index in sorted(idx, reverse=True):
+        del max_idx[index]
 
+    print(len(max_idx))            
     n10 = input_lst.rec_result(max_idx, n = 8)
     
     
     recc = [Home.objects.get(id = i+1) for i in n10]
     print(recc)
     
+                            
+
     url = [i.url for i in recc]
     image_url = []
     for i in url:
@@ -145,4 +168,4 @@ def recipe_rec(request):
         context.append(dic) 
 
     print(context)            
-    return render(request, 'index.html', {'context':context, 'lst':lst})
+    return render(request, 'index.html', {'context':context, 'lst':lst, 'hate':hate})
