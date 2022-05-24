@@ -5,7 +5,9 @@ from django.http import HttpResponse
 from django.core.serializers import serialize
 from django.http import HttpResponseNotFound
 from regex import D # 404 error
-from .models import Ingredient
+from .models import Hate_Ingredient
+from home.models import Ingredient
+import json
 
 def signup(request):
     if request.method == "POST":
@@ -20,8 +22,38 @@ def signup(request):
         else:
             return render(request, 'signup.html', {"error": {'message': "비밀번호가 일치하지 않습니다."}})
          
-        return render(request, 'signup_hate.html')
+        #return render(request, 'signup_hate.html')
+        #return redirect('signup_hate')
+        return redirect('register_hate')
     return render(request, 'signup.html')
+
+
+
+def register_hate(request):
+    if request.user.is_authenticated:
+        # 로그인 되어있는 사람만 접근 가능
+        return render(request, 'signup_hate.html')
+    else:
+        # 로그인 안되어 있을 시에 login페이지로 redirect
+        return redirect('login')
+
+
+
+def signup_hate(request):
+    if request.method == 'POST':
+        data =  request.POST
+        hate_ingredients = data.get('hate_ingredients')
+        hate_ingredients = json.loads(hate_ingredients)
+        ingrement_list = [item['value'] for item in hate_ingredients]
+        target_ing_objs = Ingredient.objects.filter(ingredients__in=ingrement_list).all()
+
+        
+        hate_ingredients=[Hate_Ingredient(
+            user=request.user,
+            ingredient= ingre_obj
+            ) for ingre_obj in target_ing_objs]
+        Hate_Ingredient.objects.bulk_create(hate_ingredients)
+    return redirect('index')
 
 def login(request):
     if request.method == "POST":
@@ -45,9 +77,7 @@ def modify(request):
     if request.method == 'POST' or 'GET':
         return render(request, 'modify.html')
 
-def signup_hate(request):
-    if request.method == 'POST':
-        return render(request, 'signup_hate.html')
+
 
 def ingredientsjson(request):
     if not request.GET.get('ingredient'):

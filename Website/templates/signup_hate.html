@@ -58,14 +58,28 @@
             <br>
             <br>
             <br>
+
             
 
             <!-- Begin page content -->
             <main class="flex-shrink-0">
                 {% block contents %}
                 {% endblock %}
-                <input name='input-custom-dropdown' class='some_class_name' placeholder='ex) 돼지고기,소고기...' id='sample'>
-                <input value='css, html, javascript'>
+                <form action="accounts/signup_hate/" method = 'post'>
+                    {% csrf_token %}    
+                    <input name='hate_ingredients' class='some_class_name' placeholder='ex) 돼지고기,소고기...' id='sample'>
+                    {% comment %} <input value='css, html, javascript'>
+                    <input type = 'text' name='input-custom-dropdown' class='some_class_name' placeholder='ex) 돼지고기,소고기...' id='sample'> {% endcomment %}
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <button type="submit" class="btn btn-primary btn-lg">등록하기</button>
+                </form>
+
+
+                {% comment %} <input name='input-custom-dropdown' class='some_class_name' placeholder='ex) 돼지고기,소고기...' id='sample'>
+                <input value='css, html, javascript'> {% endcomment %}
             </main> 
 
         
@@ -112,7 +126,7 @@
                 // tag added callback
                 function onAddTag(e) {
                     console.log("onAddTag: ", e.detail);
-                    console.log("original input value: ", inputElm.value)
+                    console.log("original input value: ", input.value)
                     tagify.off('add', onAddTag) // exmaple of removing a custom Tagify event
                 }
 
