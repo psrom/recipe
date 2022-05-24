@@ -9,12 +9,19 @@ from recipe_model import *
 import requests
 from bs4 import BeautifulSoup
 
+import random
+
 # Create your views here.
 def index(request):
+    RECIPE_NUM=8
     #print(request.user)
     #Ingredient.objects.get().hate_users()
     #print(request.user.hate_ingredients.all())
-    return render(request, 'index.html')
+    rand_val = random.randint(0, 10000)
+
+
+    default_recipe = Home.objects.filter().all()[rand_val:rand_val+RECIPE_NUM] # random 8개 
+    return render(request, 'index.html', {"context": default_recipe})
 
     
 def ingredientsjson(request):
