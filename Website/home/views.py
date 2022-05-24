@@ -122,7 +122,7 @@ def recipe_rec(request):
             if i in max_idx_ing[j]:
                 idx.append(j)
     idx = list(set(idx))            
-    print(sorted(idx, reverse=True))
+    
     for index in sorted(idx, reverse=True):
         del max_idx[index]
 
@@ -131,9 +131,14 @@ def recipe_rec(request):
     
     
     recc = [Home.objects.get(id = i+1) for i in n10]
-    print(recc)
     
-                            
+
+    if len(lst)>=2:
+        sim = jaccard(lst, lst_a[n10])                        
+    else:
+        sim = 1
+
+    print(recc)
 
     url = [i.url for i in recc]
     image_url = []
@@ -168,4 +173,5 @@ def recipe_rec(request):
         context.append(dic) 
 
     print(context)            
-    return render(request, 'index.html', {'context':context, 'lst':lst, 'hate':hate})
+    return render(request, 'index.html', {'context':context, 'lst':lst, 'hate':hate, 'sim':round(sim,3)})
+
