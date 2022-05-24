@@ -210,6 +210,3 @@ print('로딩시간:{}'.format(end1-start1))
 
 
 
-
-
-
