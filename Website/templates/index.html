@@ -1,317 +1,320 @@
+{% extends "./base.html" %}
+
 {% load static %}
-<!doctype html>
-<html lang="en" class="h-100">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.88.1">
-    <title>Sticky Footer Navbar Template · Bootstrap v5.1</title>
+{% block contents %}
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sticky-footer-navbar/">
+<body class="d-flex flex-column h-100">
 
-
-    
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-    <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
-
-
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-
-<style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-
-       
-
-        main>.container {
-            padding: 60px 15px 0;
-        }
-</style>
-{% include "header.html" %}
-</head>
-
-<div class="container">
-    <br>
-    <h3>&#128512; 재료를 입력하세요</h3>
-    <br>
-
-
-    <body class="d-flex flex-column h-100">
-
+    <div class="container">
+        <br>
+        <h3>&#128512; 재료를 입력하세요</h3>
+        <br>
         {{user}}
-        
-
         <!-- Begin page content -->
         <main class="flex-shrink-0">
-            {% block contents %}
-            {% endblock %}
-        <form action="/recipe_rec/" method = 'get'>
-            {% csrf_token %}    
-            
-            <input type = 'text' name='input-custom-dropdown' class='some_class_name' placeholder='ex) 돼지고기,소고기...' id='sample'>
-            <button type="submit" class="btn btn-primary btn-lg">레시피 추천</button>
-            <div id="p-01" style="border: 1px solid #a5f6c8;">선택한 식재료 궁합도</div>
-            
-        </form>
-        <p class="font-monospace">선택한 재료들: {{lst}}</p>    
+            <form action="/recipe_rec/" method='get'>
+                {% csrf_token %}
+
+                <input type='text' name='input-custom-dropdown' class='some_class_name' placeholder='ex) 돼지고기,소고기...'
+                    id='sample'>
+                <button type="submit" class="btn btn-primary btn-lg">레시피 추천</button>
+                <div id="p-01" style="border: 1px solid #a5f6c8;">선택한 식재료 궁합도</div>
+
+            </form>
+            <p class="font-monospace">선택한 재료들: {{lst}}</p>
         </main>
-        
-       
-        
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-            crossorigin="anonymous"></script>
-
-        <script src="https://unpkg.com/@yaireo/tagify"></script>
-
-        <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
-
-        <script>
-            var baseUrl = window.location.origin;
-            var input = document.querySelector('input#sample'),
-                // init Tagify script on the above inputs
-                tagify = new Tagify(input, {
-                    whitelist: [],
-                    maxTags: 10,
-                    dropdown: {
-                        maxItems: 20,           // <- mixumum allowed rendered suggestions
-                        classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
-                        enabled: 0,             // <- show suggestions on focus
-                        closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
-                    }
-                }),
-                controller; // for aborting the call
-            
-            /* Event Listner */
-        
-            
-
-            tagify.on('add', onAddTag)
-                .on('remove', onRemoveTag)
-                .on('input', onInput)
-                .on('edit', onTagEdit)
-                .on('invalid', onInvalidTag)
-                .on('click', onTagClick)
-                .on('focus', onTagifyFocusBlur)
-                .on('blur', onTagifyFocusBlur)
-                .on('dropdown:hide dropdown:show', e => console.log(e.type))
-                .on('dropdown:select', onDropdownSelect);
-
-            
-
-                
-            function onAddTag(e) {
-                console.log(e);
-                console.log("----")
-                console.log(e.detail)
-                
-                
-
-                
-                tagify.whitelist = null
-                
-                controller && controller.abort()
-                controller = new AbortController()
-                tagify.loading(true).dropdown.hide()
-
-                var suggest_ingredient = e.detail.tagify.value.map(function(i){
-                    return i.value
-                }).join(',')
-                console.log(suggest_ingredient)
-
-                fetch(baseUrl+'/ing_rec/?ingre=' + suggest_ingredient )
-                            .then(result => result.json())
-                            .then(function (data) {
-                                
-                                var whitelist_meat = data.result.meat
-                                var whitelist_source = data.result.source
-                                var whitelist_seafood = data.result.seafood
-                                var whitelist_seaweed = data.result.seaweed
-                                var whitelist_daily = data.result.daily
-                                var whitelist_vegetables_fruits = data.result.vegetables_fruits
-                                var whitelist_grain_nuts = data.result.grain_nuts
-                                var whitelist_others = data.result.others
-
-                                const whitelist_all = whitelist_meat.concat(whitelist_source,whitelist_vegetables_fruits,
-                                whitelist_seafood,whitelist_seaweed,whitelist_daily,whitelist_grain_nuts,whitelist_others)
-                                
-                                
-                                jar = data.jar;
-                                document.getElementById('p-01').innerHTML = jar
-                                console.log(data);
-                                
-                                console.log(whitelist_all)
-                                console.log(jar)
-                                tagify.settings.whitelist = whitelist_all ;
-                                
-                                tagify.loading(false).dropdown.show(e.detail.value);
-                                
-                            })
-                        }
-                    
-                                    
-            // tag remvoed callback
-            function onRemoveTag(e) {
-                console.log("onRemoveTag:", e.detail, "tagify instance value:", tagify.value)
-            }
-
-            function getIngrementByText(text) {
-                return fetch(baseUrl+"/api/ingredient/?ingredient=" + text);
-            }
 
 
-            // on character(s) added/removed (user is typing/deleting)
-            function onInput(e) {
-                // input 태그에 글자가 입력되었을 때 발생하는 이벤트 
-                console.log(e);
-                console.log("onInput: ", e.detail);
-                tagify.whitelist = null; // reset current whitelist
-                tagify.loading(true) // show the loader animation
+        <div class="container">
+            <br>
+            <br>
+            <h3>&#127869; 레시피를 추천해드려요 </h3>
+            <p class="font-monospace">제외한 재료들: {{hate}}</p>
+            <p class="font-monospace">검색 정확도: {{sim}}</p>
+            <br>
+            <div class="row">
+                {% for c in context %}
 
-                // get new whitelist from a delayed mocked request (Promise)
-                getIngrementByText(e.detail.value).then(function (resp) {
-                    return resp.json();
-                }).then(function (data) {
-                    var whiteList = data.map(function (item) {
-                        return item.fields.ingredients;
-                    })
-                    console.log(data);
-                    console.log(whiteList)
-                    tagify.settings.whitelist = whiteList;
-                    tagify.loading(false).dropdown.show(e.detail.value);
-                })
-                
-                //             fields:
-                // ingredients: "마늘잎"
-                // [[Prototype]]: Object
-                // model: "home.ingredient"
-                // pk: 26
-
-                // mockAjax()
-                //     .then(function (result) {
-                //         tagify.settings.whitelist = result.concat(tagify.value) // add already-existing tags to the new whitelist array
-
-                //         tagify
-                //             .loading(false)
-                //             // render the suggestions dropdown.
-                //             .dropdown.show(e.detail.value);
-                //     })
-                //     .catch(err => tagify.dropdown.hide())
-            }
-
-            function onTagEdit(e) {
-                console.log("onTagEdit: ", e.detail);
-            }
-
-            // invalid tag added callback
-            function onInvalidTag(e) {
-                console.log("onInvalidTag: ", e.detail);
-            }
-
-            // invalid tag added callback
-            function onTagClick(e) {
-                console.log(e.detail);
-                console.log("onTagClick: ", e.detail);
-            }
-
-            function onTagifyFocusBlur(e) {
-                console.log(e.type, "event fired")
-                tagify.whitelist = null
-                
-                controller && controller.abort()
-                controller = new AbortController()
-                tagify.loading(true).dropdown.hide()
-
-                var suggest_ingredient = e.detail.tagify.value.map(function(i){
-                    return i.value
-                }).join(',')
-                console.log(suggest_ingredient)
-
-                fetch(baseUrl+'/ing_rec/?ingre=' + suggest_ingredient )
-                            .then(result => result.json())
-                            .then(function (data) {
-                                
-                                var whitelist_meat = data.result.meat
-                                var whitelist_source = data.result.source
-                                var whitelist_seafood = data.result.seafood
-                                var whitelist_seaweed = data.result.seaweed
-                                var whitelist_daily = data.result.daily
-                                var whitelist_vegetables_fruits = data.result.vegetables_fruits
-                                var whitelist_grain_nuts = data.result.grain_nuts
-                                var whitelist_others = data.result.others
-
-                                const whitelist_all = whitelist_meat.concat(whitelist_source,whitelist_vegetables_fruits,
-                                whitelist_seafood,whitelist_seaweed,whitelist_daily,whitelist_grain_nuts,whitelist_others)
-                                
-                                
-                                jar = data.jar;
-                                document.getElementById('p-01').innerHTML = jar
-                                console.log(data);
-                                
-                                console.log(whitelist_all)
-                                console.log(jar)
-                                tagify.settings.whitelist = whitelist_all ;
-                                
-                                tagify.loading(false).dropdown.show(e.detail.value);
-                                
-                            })
-                        }
-                
-                
-            function onDropdownSelect(e) {
-                console.log("onDropdownSelect: ", e.detail)
-            }
-        </script>
-    </body>
-
-</div>
-<div class="container">
-    <br>
-    <br>
-    <h3>&#127869; 레시피를 추천해드려요 </h3>
-    <p class="font-monospace">제외한 재료들: {{hate}}</p>
-    <p class="font-monospace">검색 정확도: {{sim}}</p>   
-    <br>
-    <div class = "row">
-        {% for c in context %}
-        
-        <div class = "col">
-            <div class="card h-100 " style="width: 18rem;">
-                <img src={{c.img_url}} class="card-img-top" width="150px" height="150px" alt="...">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{c.name}}</h5>
-                    <p class="card-text">{{c.ingredients}}</p>
-                    <a href={{c.url}} class="align-self-end btn btn-primary" style="margin-top: auto;" target = '_blank'>레시피 보기</a>
-                    {% comment %} <a href='...'class="btn btn-success" target = '_blank'>유사한 레시피보기</a> {% endcomment %}
+                <div class="col">
+                    <div class="card h-100 " style="width: 18rem;">
+                        <img src={{c.img_url}} class="card-img-top" width="150px" height="150px" alt="...">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{c.name}}</h5>
+                            <p class="card-text">{{c.ingredients}}</p>
+                            <a href={{c.url}} class="align-self-end btn btn-primary" style="margin-top: auto;"
+                                target='_blank'>레시피 보기</a>
+                            {% comment %} <a href='...' class="btn btn-success" target='_blank'>유사한 레시피보기</a>
+                            {% endcomment%}
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
+
+
+
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+            <script src="/docs/5.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous"></script>
+
+            <script src="https://unpkg.com/@yaireo/tagify"></script>
+
+            <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+
+            <script>
+                var input = document.querySelector('input#sample'),
+                    // init Tagify script on the above inputs
+                    tagify = new Tagify(input, {
+                        enforceWhitelist: true,
+                        whitelist: ['오소리', '승마', '참돔', '꿀', '루이보스', '아마', '유자껍질', '뽕나무', '다시마육수', '곡물식초',
+                            '와일드라이스', '새싹채소', '옥수수콘', '쿠민', '메밀', '딸기잼', '아가베시럽', '바게트', '아루굴라', '자몽과육',
+                            '드라이이스트', '상황버섯', '돼지고기', '돌나물', '파파야', '마늘잎', '마카다미아', '타히니', '상치', '고등어포',
+                            '호박씨', '프로볼로네', '바닐라에센스', '산파', '월계수분', '땡초', '조미료', '페퍼론치노', '계란노른자', '프리카',
+                            '콘옥수수', '세발낙지', '양파청', '연유', '오트밀', '연어', '단호박씨', '스테비아', '빵', '닭', '건고추', '매실청',
+                            '옥수수 전분', '새꼬막', '미원', '참나물', '레몬', '꽃소금', '슬라이스햄', '오렌지', '미향', '시래기', '잔대', '군소',
+                            '찹쌀풀', '초고추장', '한천', '겨우살이', '딜', '다시마물', '한우', '박력쌀가루', '옥수수통조림', '동태', '홍연어',
+                            '리코타', '통마늘', '호박잎', '쑥부쟁이', '슈가파우더', '올리브오일', '미림', '우럭', '페타', '울타리콩', '봄동', '소면',
+                            '허브소금', '세이지', '쇠고기', '밀가루', '찰현미가루', '발사믹', '사골', '치킨', '청고추', '감', '고수잎', '수세미',
+                            '마른새우', '개복치', '멧돼지', '목살', '소세지', '캐슈넛', '아세로라', '과메기', '무씨', '고들빼기', '닭가슴살', '쌀뜨물',
+                            '순대', '카이엔페퍼', '얼갈이배추', '바지락', '또띠아', '스피루리나', '계란물', '콩가루', '남초', '청어', '양미리', '대추',
+                            '숙주나물', '사골육수', '포피', '소금', '커피', '그라나 파다노', '가지', '아몬드파우더', '엉겅퀴', '레몬청', '스파게티면',
+                            '홍고추', '대구알', '베이', '레몬과육', '무염버터', '슬라이스체더', '핫케이크가루', '부들', '올방개', '라즈베리', '두리안',
+                            '거위', '뽕나무버섯', '델라웨어포도', '아스파라거스', '돼지고기앞다리살', '가리비살', '단무지', '송어', '크림', '식용류',
+                            '렌틸콩', '콜라드', '머위대', '마카분말', '붕어', '뜨거운물', '밀나물', '한라봉주스', '아욱', '백포도주', '비파', '감자',
+                            '쥐치', '키조개', '김밥', '복분자식초', '리치', '카놀라유', '시럽', '모스카토', '들깨', '건크랜베리', '율무', '중하',
+                            '소고기다짐육', '홍국', '양파개', '고수씨', '이스트', '커피가루', '멸치액젓', '참굴', '갈은깨', '당면', '닭날개', '육수',
+                            '코코아', '베이킹파우더', '백설탕', '오징어채', '생크림', '공기밥', '후무스', '녹말', '래디시', '노가리', '쥐포', '노각',
+                            '도루묵', '참나물잎', '달걀흰자', '달걀', '중력분', '용안', '황국', '비단가리비', '조개', '안창살', '오리알', '진미채',
+                            '매생이', '쿠스쿠스', '무화과열매', '오이', '낫토', '라벤더', '아삭이 고추', '부세', '찹쌀', '고사리', '들기름', '수박주스',
+                            '비엔나소시지', '상추', '유지', '조기', '버찌', '브루스', '백후추', '청양고추', '마시멜로', '물냉이', '날치', '뿔소라',
+                            '소고기', '매실엑기스', '실고추', '생강청', '고추가루', '원추리', '매실액', '야채', '허니머스타드', '진피', '히비스커스꽃',
+                            '슈가', '매실진액', '미나리', '멸치다시육수', '카더몬', '풋고추', '떡볶이', '건표고버섯', '소갈비', '생강', '주꾸미', '파',
+                            '알배추', '문어', '토마티요', '후추', '황태포', '옥수수전분', '농어', '배초향', '머스타드', '팥앙금', '칡', '사카린',
+                            '만능간장', '생강가루', '고니', '흰목이', '칠리소스', '적포도주', '춘장', '브리', '해삼', '들깨가루', '월계수', '타라곤',
+                            '스트링치즈', '겨자잎', '밀가루박력분', '꽈리고추', '슬로우', '석이버섯', '생새우', '부채살', '연두부', '깨소금', '풋콩',
+                            '고구마줄기', '팥가루', '묵은김치', '잡채', '채종유', '땅콩', '참치캔', '골파', '산초', '파카', '고추장', '복어', '페페론치노',
+                            '검은깨', '홍삼', '라임', '스프링클', '주키니', '우거지', '잣', '사워크림', '치마살', '현미', '옥수수캔', '석이', '육두구',
+                            '소시지', '비정제황설탕', '토마토', '양하', '녹두', '두부', '술', '신김치', '새송이버섯', '쪽파', '맥문동', '할라피뇨', '수수',
+                            '돈까스소스', '징거미새우', '붓순나무', '브라질넛', '처빌', '멸치다시마육수', '참치', '청경채', '양송이', '셀러리악',
+                            '까나리액젓', '석산', '시나몬파우더', '다채', '만두피', '파스타', '배춧잎', '장어', '올스파이스', '영양부추', '타로',
+                            '대패삼겹살', '가리비', '새조개', '사과식초', '스테이크소스', '닭봉', '소엽', '간고등어', '소고기다시다', '멸치', '튀김기름',
+                            '체다슬라이스치즈', '쑥갓잎', '양상추잎', '천연조미료', '다랑어', '돼지고기목살', '취나물', '곶감', '달걀노른자', '북어포',
+                            '바게트빵', '냉이뿌리', '맛간장', '뱅어', '넙치', '흰설탕', '튀김가루', '스파게티', '덕대', '파슬리', '계피가루', '얼갈이',
+                            '열무김치', '곰피', '황금', '고구마', '도토리묵', '빙어', '미역', '깻잎', '흰다리새우', '노루궁뎅이버섯', '조선간장',
+                            '통밀가루', '우삼겹', '탱자', '피스타치오', '샐러드', '잔멸치', '토마토 퓌레', '매운고추', '우엉', '오디', '당귀', '포도',
+                            '바질가루', '작두콩', '녹각', '아사이베리', '무화과', '카레가루', '실파', '머위', '황설탕', '폰즈', '파마산치즈가루', '오골계',
+                            '셀러리잎', '또띠야', '맛살', '모과', '오이피클', '정향', '버섯', '거피팥', '톳', '삼백초', '로즈힙', '임연수어', '전갱이',
+                            '닭고기', '갈랑갈', '콜라', '설탕', '신선초', '밀', '방울토마토', '민어', '인스턴트', '유자', '파스타면', '생수', '캐슈',
+                            '코끼리조개', '달래', '목이버섯', '와사비', '닭육수', '꽁치통조림', '펜넬', '카다몬', '레몬그라스', '피조개', '허브',
+                            '강황가루', '고구마 전분', '겨자', '언두부', '파르메산', '천도복숭아', '딸기식초', '우스터 소스', '마늘쫑', '체더', '어간장',
+                            '갈색설탕', '홍초', '귀리', '진간장', '토란줄기', '아몬드', '빵가루', '피망', '붉은고추', '건미역', '멜론', '결명자', '당밀',
+                            '망고', '피자소스', '계피', '고추씨', '우스타소스', '새우살', '건포도', '분유', '건조토마토', '조생', '전분가루', '체리',
+                            '황태채', '머루', '느타리버섯', '모자반', '더덕', '오미자', '쌈장', '보리새우', '샐러드채소', '김치', '돈가스', '모닝빵',
+                            '사과', '달걀물', '닭 다리살', '투메릭', '볶은결명자', '브로콜리', '까나리', '짜장가루', '마른고추', '은대구', '올리브',
+                            '포도씨유', '명태', '차이브', '닭안심', '현미식초', '건새우', '용과', '야콘', '명란', '김칫국물', '전분물', '가자미', '배즙',
+                            '도가니살', '청대구', '식용색소', '엔다이브', '배추잎', '연잎', '아보카도', '강황', '감잎', '메밀가루', '맥주', '적상추',
+                            '떡국', '화이트초콜릿', '다시마가루', '블루베리식초', '양배추잎', '까치버섯', '코코아파우더', '체다', '고추기름', '삼겹살',
+                            '차조', '검은콩', '타마린드', '요거트', '양태', '스테이크', '훈제연어', '전복', '가는소금', '자란', '업진살', '킹크랩', '비트',
+                            '양고기', '돼지갈비', '모짜렐라치즈', '올리브 오일', '미숫가루', '가지버섯', '유카', '샐러리', '파프리카', '보리멸', '페스토',
+                            '월넛', '듀럼밀', '미역귀', '건표고', '보리', '어린잎채소', '참조기', '사각어묵', '돼지고기다짐육', '마조람', '석류',
+                            '해바라기씨유', '치즈', '꽃새우', '멸치가루', '햄', '대창', '화이트와인', '꼬리', '숭어', '천궁', '오징어먹물', '김장김치',
+                            '아티초크', '다래', '레몬밤', '흑초', '흰민들레', '피나물', '팽이버섯', '성게알', '마요네즈', '은어', '계란', '홍어',
+                            '우스터소스', '닭안심살', '총각무', '애플망고', '치킨스톡', '불고기', '케첩', '대게', '헤이즐넛', '돼지등뼈', '돼지 갈비살',
+                            '숙주', '얼음', '옥돔', '미역줄기', '감성돔', '화이트와인식초', '후춧가루', '간', '민트', '닭 날개', '사과즙', '곰치',
+                            '살오징어', '천연조미료육수', '바닐라빈', '호박', '때죽', '스타프루트', '피자치즈', '황태', '홍피망', '메로', '흑미', '시나몬',
+                            '링곤베리', '사탕수수', '속새', '식초', '감귤', '딸기', '전분', '유부', '두릅', '귤', '생굴', '오이고추', '팔각', '크림치즈',
+                            '소불고기', '중국부추', '갈매기살', '동부', '꼬시래기', '아롱사태', '참가자미', '아카시아', '쇠뜨기', '모시조개', '토란', '팥',
+                            '장지', '떡국떡', '돈까스', '캔참치', '순무', '살구', '소주', '누룽지', '매화꽃', '잉어', '토마토케첩', '녹말물', '치커리',
+                            '검정깨', '요구르트', '홍시', '씨겨자', '앵두', '견과류', '감자 전분', '참기름술', '라면스프', '호박고구마', '자두', '매실',
+                            '돼지감자', '국멸치', '은장어', '다시팩', '훈제치즈', '서양배', '살라미', '미더덕', '육포', '쏨뱅이', '파채', '꽃등심',
+                            '국물용멸치', '할라페뇨', '김치국물', '효모', '스팸', '휘핑크림', '모짜렐라', '좁쌀', '오갈피', '물', '우설', '마늘가루',
+                            '호박꽃', '만두', '바닐라오일', '심장', '베이컨', '진달래', '피클링스파이스', '쌈무', '열무', '간마늘', '청주', '콜라비',
+                            '페페로니', '집된장', '황기', '강활', '캐롭', '앞다리살', '도라지', '고수', '갯가재', '훈제오리', '부케가르니', '슬라이스아몬드',
+                            '돌게', '쫄면', '파스닙', '케일잎', '아삭이고추', '흰목이버섯', '성게', '마가린', '다시다', '흰강낭콩', '적어', '볼락', '생강술',
+                            '까마중', '아욱잎', '곤약', '번행초', '우무', '향버섯', '자몽', '허브식초', '우동면', '카망베르', '안심살', '인스턴트커피',
+                            '레드와인', '갑오징어', '키위', '코코넛 밀크', '에스프레소', '메주', '어수리', '버터', '명란젓', '황도', '그뤼에르', '우뭇가사리',
+                            '굴소스', '달고기', '오크라', '플레인', '카카오', '사과껍질', '홍합', '탄산수', '백리향', '박하', '완두콩', '순두부', '톳나물',
+                            '무우', '방어', '건조딸기', '매실액기스', '마카로니', '돼지목살', '하바티', '가다랑어포', '액젓', '자몽주스', '청포도', '쇠비름',
+                            '백앙금', '모차렐라치즈', '조청', '쌀국수', '칼국수면', '산마늘', '홍당무', '생강즙', '양상추', '칠면조', '비엔나소세지', '택사',
+                            '둥굴레', '메이플시럽', '검정콩', '수조기', '전어', '통후추', '다슬기', '연겨자', '게살', '양파가루', '알감자', '땅콩버터', '흑임자',
+                            '커런트', '한라봉', '석결명', '찬물', '골드키위', '캔옥수수', '쇠미역', '오뎅', '야로', '냉이', '마늘종', '슬라이스치즈', '콩기름',
+                            '단호박가루', '넛맥', '플레인요구르트', '우둔살', '옥수수기름', '통조림', '하수오', '박고지', '열빙어', '간장술', '무말랭이', '피씨',
+                            '콜리플라워', '다크초콜릿', '바질씨', '가재', '당근', '당근잎', '천일염', '옥수수', '백화고', '부추잎', '닭 가슴살', '백지', '샬롯',
+                            '무청', '키리', '머스터드소스', '통조림햄', '대파뿌리', '백선', '조미김', '천마', '살치살', '양지머리', '보리순',
+                            '새송이', '감태', '작약', '퀴노아', '딸기쨈', '쭈꾸미', '가래떡', '에멘탈', '청양', '콩나물', '비단조개', '청포묵',
+                            '파마산', '청양초', '멸치육수', '유자청', '올리고당', '마른미역', '송로버섯', '오이지', '코다리', '사이다', '채끝살',
+                            '머슬', '두반장', '우동사리', '백태', '돌돔', '고춧가루', '복숭아', '비트주스', '아몬드슬라이스', '터메릭', '감초',
+                            '붕장어', '영지버섯', '은행', '파인애플', '참깨', '통삼겹살', '세발나물', '고등어', '애느타리버섯', '오징어', '화분',
+                            '날치알', '물밤', '대합', '토란잎', '완두', '취', '비지', '영귤', '크루아상', '갓', '피쉬소스', '마테', '간생강',
+                            '소라', '칼국수', '박력분', '훈제', '지방', '참당귀', '크레송', '메기', '꽃게', '무순', '체다치즈', '적양파', '푸아그라',
+                            '튀김유', '지칭개', '계핏가루', '백년초가루', '마늘', '매실식초', '국간장', '오일', '엄나무', '도다리', '올리브유',
+                            '파드득나물', '쇼트닝', '화이트발사믹식초', '황칠나무', '베이킹소다', '바나나식초', '아위', '삼각살', '노른자', '매실원액',
+                            '칵테일', '제비꽃', '마론', '개조개', '곱창', '순채', '배식초', '박대', '베이비채소', '간장', '청양고춧가루', '흑태',
+                            '김밥용김', '셀러리', '김밥김', '수박', '파인애플식초', '유자씨', '비엔나', '밤고구마', '맛조개', '한련', '학꽁치',
+                            '고추', '국수', '브로컬리', '상추잎', '아마란스', '파뿌리', '에담', '가다랑어', '꾸리살', '배', '구기자', '무',
+                            '표고', '마카다미아오일', '냉면육수', '울금', '미꾸라지', '인스턴드라이이스트', '흑설탕', '블루베리', '월계수잎', '메주콩',
+                            '치킨파우더', '낙지', '클로렐라', '복령', '청홍고추', '칵테일새우', '쌈채소', '수리취', '적양배추', '감식초', '면수',
+                            '와인', '등갈비', '조림간장', '콩잎', '발사믹식초', '퍼치', '된장', '해바라기씨', '물엿', '건조감자', '마스카포네 치즈',
+                            '라면사리', '라디치오', '청매', '대파', '오레가노', '양배추', '황돔', '크랜베리', '병풀잎', '절구버섯', '허브가루',
+                            '양송이버섯', '설깃머리살', '녹말가루', '참치액', '캐모마일', '후추가루', '다시마', '홍파프리카', '다시물', '새싹',
+                            '눈다랑어', '클로브', '쌀가루', '능이버섯', '리큐르', '식빵', '소송채', '죽순', '지황', '허니머스터드', '서대',
+                            '묵은지', '테프', '계란흰자', '시사모', '달개비', '식용유', '연근', '깨', '판젤라틴', '레몬즙', '루꼴라', '코코넛',
+                            '시금치', '건두부', '무가당', '곰취', '질경이', '쌀뜬물', '단호박', '롤라로사', '대추씨', '김', '참외', '새우',
+                            '노니', '바질페스토', '블랙올리브', '다래순', '탈지분유', '호밀가루', '초콜릿', '메이스', '표고버섯', '마지팬',
+                            '죽염', '패션후르츠', '적채', '애플민트', '스테비아잎', '치아씨', '멍게', '강낭콩', '시나몬가루', '통깨', '족발',
+                            '새우젓', '머스타드소스', '올방개묵', '아귀', '서리태', '북어', '우리밀', '볶은호두', '양파즙', '쌀밥', '불고기용',
+                            '꽃사과', '맛소금', '아니스', '준치', '데리야끼소스', '스트링빈스', '밤', '옥수수수염', '로즈마리', '칼라만시',
+                            '청량고추', '아이스크림', '피칸', '꼬막', '샤프란', '잠두', '밤콩', '기장', '금귤', '동죽', '골뱅이', '적겨자',
+                            '찬밥', '고르곤졸라', '인스턴트드라이이스트', '양파', '새우가루', '로메인', '닭다리살', '바닐라익스트랙', '틸라피아',
+                            '송화', '코코아가루', '헛개', '오미자식초', '고비', '제조', '맛술', '떡볶이떡', '굴비', '치즈가루', '수삼',
+                            '홀그레인', '흰콩', '쑥', '두유', '생모차렐라', '항정살', '참치액젓', '약콩', '가츠오부시', '딸기주스', '청피망',
+                            '김가루', '카레', '도미', '정어리', '닭볶음탕용', '멥쌀', '잔대뿌리', '캐비어', '굴', '클레멘타인', '레드와인식초',
+                            '붉은대게', '애호박', '소 안심', '라드', '핫소스', '초고버섯', '유채', '복분자딸기', '바닐라', '스파게티소스',
+                            '가죽나물', '히비스커스', '메추리알', '돼지등갈비', '시금치잎', '닭다리', '물미역', '프로슈토', '아오리사과',
+                            '자기', '바나나', '럼주', '논우렁이', '대두', '근대', '아귀간', '유채유', '떡', '두메부추', '우유', '크래미',
+                            '통치', '염소', '배추', '플레인요거트', '클로버', '닭발', '병어', '송이버섯', '재첩', '부추', '싸리버섯', '선어',
+                            '청국장', '고구마순', '베이킹', '대구', '초코칩', '고형카레', '돈가스소스', '호두', '오레오', '파마산치즈',
+                            '청각', '기름', '부침가루', '피클', '강력분', '잔파', '차전자피', '참치통조림', '집게', '홀그레인머스터드',
+                            '인삼뿌리', '꽁치', '타피오카 전분', '토마토케찹', '머스터드', '송이', '깍두기', '케찹', '스위티', '망고스틴',
+                            '가쓰오부시', '선지', '씀바귀', '볶은캐슈', '어묵', '베트남고추', '단감', '꽃상추', '나한과', '쥐눈이콩',
+                            '피문어', '호밀', '참기름', '스위트콘', '포포', '양조간장', '녹차가루', '피마자', '오리고기', '케일', '나팔버섯',
+                            '토마토소스', '감자전분', '인삼줄기', '바지락살', '고다', '포멜로', '북어채', '쑥갓', '현미밥', '대두유', '대하',
+                            '참붕어', '윗등심', '기름치', '관자', '공심채줄기', '코코넛오일', '게맛살', '기러기', '장두부', '코코넛 크림',
+                            '개복숭아', '콩', '엿기름', '찹쌀가루', '벌꿀', '과일식초', '자색고구마', '타라', '타바스코', '샴페인', '느타리',
+                            '돼지', '멸치다시마', '돼지 등심', '쌀', '허브솔트', '집간장', '젤라틴', '인삼', '산마', '라이스페이퍼',
+                            '해바라기유', '코티지', '바질', '진달래꽃', '밥', '라면', '표고버섯가루', '가시리', '삼치', '고추냉이',
+                            '미나리잎', '마', '개불', '파슬리가루', '닭새우', '국화', 'LA갈비', '차돌박이', '슈거파우더', '아몬드가루',
+                            '배추김치', '알배기배추', '파래', '갈치'],
+                        maxTags: 10,
+                        dropdown: {
+                            maxItems: 20,           // <- mixumum allowed rendered suggestions
+                            classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+                            enabled: 0,             // <- show suggestions on focus
+                            closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+                        }
+                    })
+
+                /* Event Listner */
+
+                tagify.on('add', onAddTag)
+                    .on('remove', onRemoveTag)
+                    .on('input', onInput)
+                    .on('edit', onTagEdit)
+                    .on('invalid', onInvalidTag)
+                    .on('click', onTagClick)
+                    .on('focus', onTagifyFocus)
+                    .on('blur', onTagifyBlur)
+                    .on('dropdown:hide dropdown:show', e => console.log(e.type))
+                    .on('dropdown:select', onDropdownSelect);
+
+
+
+
+                // tag added callback
+                function onAddTag(e) {
+                    console.log("onAddTag: ", e.detail);
+                    console.log("original input value: ", input.value)
+                    tagify.off('add', onAddTag) // exmaple of removing a custom Tagify event
+                }
+
+                // tag remvoed callback
+                function onRemoveTag(e) {
+                    console.log("onRemoveTag:", e.detail, "tagify instance value:", tagify.value)
+                }
+
+                function getIngrementByText(text) {
+                    return fetch("http://127.0.0.1:8000/api/ingredient/?ingredient=" + text);
+                }
+
+
+                // on character(s) added/removed (user is typing/deleting)
+                function onInput(e) {
+                    // input 태그에 글자가 입력되었을 때 발생하는 이벤트 
+                    console.log(e);
+                    console.log("onInput: ", e.detail);
+                    tagify.whitelist = null; // reset current whitelist
+                    tagify.loading(true) // show the loader animation
+
+                    // get new whitelist from a delayed mocked request (Promise)
+                    getIngrementByText(e.detail.value).then(function (resp) {
+                        return resp.json();
+                    }).then(function (data) {
+                        var whiteList = data.map(function (item) {
+                            return item.fields.ingredients;
+                        })
+                        console.log(data);
+                        console.log(whiteList)
+                        tagify.settings.whitelist = whiteList;
+                        tagify.loading(false).dropdown.show(e.detail.value);
+                    })
+
+                    //             fields:
+                    // ingredients: "마늘잎"
+                    // [[Prototype]]: Object
+                    // model: "home.ingredient"
+                    // pk: 26
+
+                    // mockAjax()
+                    //     .then(function (result) {
+                    //         tagify.settings.whitelist = result.concat(tagify.value) // add already-existing tags to the new whitelist array
+
+                    //         tagify
+                    //             .loading(false)
+                    //             // render the suggestions dropdown.
+                    //             .dropdown.show(e.detail.value);
+                    //     })
+                    //     .catch(err => tagify.dropdown.hide())
+                }
+
+                function onTagEdit(e) {
+                    console.log("onTagEdit: ", e.detail);
+                }
+
+                // invalid tag added callback
+                function onInvalidTag(e) {
+                    console.log("onInvalidTag: ", e.detail);
+                }
+
+                // invalid tag added callback
+                function onTagClick(e) {
+                    console.log(e.detail);
+                    console.log("onTagClick: ", e.detail);
+                }
+
+                function onTagifyBlur(e) {
+                    console.log(e.type, "event fired");
+                    console.log(e)
+                }
+
+                function onTagifyFocus(e) {
+                    console.log(e.type, "event fired")
+                    tagify.whitelist = null; // reset current whitelist
+                    tagify.loading(true) // show the loader animation
+
+                    // get new whitelist from a delayed mocked request (Promise)
+                    getIngrementByText('').then(function (resp) {
+                        return resp.json();
+                    }).then(function (data) {
+                        var whiteList = data.map(function (item) {
+                            return item.fields.ingredients;
+                        })
+                        console.log(data);
+                        console.log(whiteList)
+                        tagify.settings.whitelist = whiteList;
+                        tagify.loading(false).dropdown.show(e.detail.value);
+                    })
+                }
+
+                function onDropdownSelect(e) {
+                    console.log("onDropdownSelect: ", e.detail)
+                }
+            </script>
         </div>
-        
-        {% endfor %}
-    </div>
-        
-        
-
-
-
-{% include "footer.html" %}
-</html>
+</body>
+<br>
+{% endblock %}
