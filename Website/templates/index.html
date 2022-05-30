@@ -67,6 +67,7 @@
             <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
             <script>
+                {% comment %} var controller = new AbortController(); {% endcomment %}
                 var input = document.querySelector('input#sample'),
                     // init Tagify script on the above inputs
                     tagify = new Tagify(input, {
@@ -197,7 +198,9 @@
                             enabled: 0,             // <- show suggestions on focus
                             closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
                         }
-                    })
+                    }),
+                    controller; // for aborting the call
+
 
                 /* Event Listner */
 
@@ -217,10 +220,53 @@
 
                 // tag added callback
                 function onAddTag(e) {
-                    console.log("onAddTag: ", e.detail);
-                    console.log("original input value: ", input.value)
-                    tagify.off('add', onAddTag) // exmaple of removing a custom Tagify event
-                }
+                    console.log(e);
+                    console.log("----")
+                    console.log(e.detail)
+                    
+                    
+    
+                    
+                    tagify.whitelist = null
+                    
+                    controller && controller.abort()
+                    controller = new AbortController()
+                    tagify.loading(true)
+    
+                    var suggest_ingredient = e.detail.tagify.value.map(function(i){
+                        return i.value
+                    }).join(',')
+                    console.log(suggest_ingredient)
+    
+                    fetch('http://127.0.0.1:8000/ing_rec/?ingre=' + suggest_ingredient )
+                                .then(result => result.json())
+                                .then(function (data) {
+                                    
+                                    var whitelist_meat = data.result.meat
+                                    var whitelist_source = data.result.source
+                                    var whitelist_seafood = data.result.seafood
+                                    var whitelist_seaweed = data.result.seaweed
+                                    var whitelist_daily = data.result.daily
+                                    var whitelist_vegetables_fruits = data.result.vegetables_fruits
+                                    var whitelist_grain_nuts = data.result.grain_nuts
+                                    var whitelist_others = data.result.others
+    
+                                    const whitelist_all = whitelist_meat.concat(whitelist_source,whitelist_vegetables_fruits,
+                                    whitelist_seafood,whitelist_seaweed,whitelist_daily,whitelist_grain_nuts,whitelist_others)
+                                    
+                                    
+                                    jar = data.jar;
+                                    document.getElementById('p-01').innerHTML = jar
+                                    console.log(data);
+                                    
+                                    console.log(whitelist_all)
+                                    console.log(jar)
+                                    tagify.settings.whitelist = whitelist_all ;
+                                    
+                                    tagify.loading(false).dropdown.show(e.detail.value);
+                                    
+                                })
+                            }
 
                 // tag remvoed callback
                 function onRemoveTag(e) {
@@ -287,6 +333,7 @@
                 }
 
                 function onTagifyBlur(e) {
+                    
                     console.log(e.type, "event fired");
                     console.log(e)
                 }
