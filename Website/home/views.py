@@ -71,7 +71,7 @@ def recipe_rec(request):
     print(lst)
     input_lst = Recipe_rec(lst)
 
-    max_idx = input_lst.cosin_m(n = 300, p = True)
+    max_idx = input_lst.cosin_m(n = 500, p = True)
    
     max_idx_ing = [eval(Home.objects.get(id = i+1).ingredients_pre) for i in max_idx]
     
@@ -87,7 +87,7 @@ def recipe_rec(request):
         del max_idx[index]
 
     print(len(max_idx))            
-    n10 = input_lst.rec_result(max_idx, n = 20)
+    n10 = input_lst.rec_result(max_idx, n = 60)
     
     
     recc = [Home.objects.get(id = i+1) for i in n10]
