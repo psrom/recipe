@@ -31,21 +31,21 @@
             <br>
             <h3>&#127869; 레시피를 추천해드려요 </h3>
             <p class="font-monospace">제외한 재료들: {{hate}}</p>
-            <p class="font-monospace">검색 정확도: {{sim}}</p>
+            
             <br>
             <div class="row">
                 {% for c in context %}
 
                 <div class="col my-3">
                     <div class="card h-100 " style="width: 18rem;">
-                        <img src={{c.img_url}} class="card-img-top" width="150px" height="150px" alt="...">
+                        <img src={{c.image_url}} class="card-img-top" width="150px" height="150px" alt="...">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{c.name}}</h5>
                             <p class="card-text">{{c.ingredients}}</p>
                             <a href={{c.url}} class="align-self-end btn btn-primary" style="margin-top: auto;"
                                 target='_blank'>레시피 보기</a>
-                            {% comment %} <a href='...' class="btn btn-success" target='_blank'>유사한 레시피보기</a>
-                            {% endcomment%}
+                            
+                            
                         </div>
                     </div>
                 </div>

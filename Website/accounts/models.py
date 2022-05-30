@@ -9,5 +9,4 @@ class Hate_Ingredient(models.Model):
     # user_id = models.IntegerField()
     ingredient=models.ForeignKey(HomeIngredient, on_delete=models.CASCADE)
     # ingredients = models.TextField()
-    def __str__(self):
-        return self.Hate_Ingredient
+    

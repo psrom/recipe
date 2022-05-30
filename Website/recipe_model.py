@@ -8,7 +8,6 @@ from numpy.linalg import norm
 from numba import jit
 import datetime
 
-
 start1 = datetime.datetime.now()
 #pip install scikit-learn==1.0.2    
 
@@ -108,7 +107,7 @@ class Recipe_rec:
         matrix += w2[i]*model.wv[d[i]]
         if p == True:
           print(w2[i])
-    result = matrix/len(d)
+    result = matrix
 
     #코사인 유사도 다 구하기
     lst2 = []
@@ -207,6 +206,3 @@ print('로딩시간:{}'.format(end1-start1))
 # end = datetime.datetime.now()
 
 # print(end-start)
-
-
-
