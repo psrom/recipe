@@ -336,6 +336,46 @@
                     
                     console.log(e.type, "event fired");
                     console.log(e)
+                    tagify.whitelist = null
+                    
+                    controller && controller.abort()
+                    controller = new AbortController()
+                    tagify.loading(true)
+    
+                    var suggest_ingredient = e.detail.tagify.value.map(function(i){
+                        return i.value
+                    }).join(',')
+                    console.log(suggest_ingredient)
+    
+                    fetch('http://127.0.0.1:8000/ing_rec/?ingre=' + suggest_ingredient )
+                                .then(result => result.json())
+                                .then(function (data) {
+                                    
+                                    var whitelist_meat = data.result.meat
+                                    var whitelist_source = data.result.source
+                                    var whitelist_seafood = data.result.seafood
+                                    var whitelist_seaweed = data.result.seaweed
+                                    var whitelist_daily = data.result.daily
+                                    var whitelist_vegetables_fruits = data.result.vegetables_fruits
+                                    var whitelist_grain_nuts = data.result.grain_nuts
+                                    var whitelist_others = data.result.others
+    
+                                    const whitelist_all = whitelist_meat.concat(whitelist_source,whitelist_vegetables_fruits,
+                                    whitelist_seafood,whitelist_seaweed,whitelist_daily,whitelist_grain_nuts,whitelist_others)
+                                    
+                                    
+                                    jar = data.jar;
+                                    document.getElementById('p-01').innerHTML = jar
+                                    console.log(data);
+                                    
+                                    console.log(whitelist_all)
+                                    console.log(jar)
+                                    tagify.settings.whitelist = whitelist_all ;
+                                    
+                                    tagify.loading(false).dropdown.show(e.detail.value);
+                                    
+                                })
+                            
                 }
 
                 function onTagifyFocus(e) {

@@ -195,14 +195,36 @@ end1 = datetime.datetime.now()
 
 print('로딩시간:{}'.format(end1-start1))
 
-#####처음 컴파일용
+####처음 컴파일용
 
-# test = ['소고기']
-# a = Recipe_rec(test)
-# start = datetime.datetime.now()
+test = ['소고기']
+a = Recipe_rec(test)
+start = datetime.datetime.now()
 
-# max_idx = a.cosin_m()
-# result = a.rec_result(max_idx)
-# end = datetime.datetime.now()
+max_idx = a.cosin_m()
+result = a.rec_result(max_idx)
+end = datetime.datetime.now()
 
-# print(end-start)
+print(end-start)
+
+
+
+# df = pd.read_csv('model_eval.csv')
+
+# df_ran = pd.read_csv('model_eval_random.csv')
+ 
+
+
+# df
+# df_ran['man_site_jar'].describe()
+# df_ran['model_jar'].describe()
+
+# lst = ['새우', '양파']
+
+
+
+# lst
+
+
+
+
