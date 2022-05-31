@@ -7,8 +7,7 @@ from .models import Ingredient
 from .models import Home
 from accounts.models import Hate_Ingredient
 from recipe_model import *
-import requests
-from bs4 import BeautifulSoup
+
 
 import random
 
@@ -92,10 +91,16 @@ def recipe_rec(request):
     
     recc = [Home.objects.get(id = i+1) for i in n10]
     
+    sor = {}
+    for i in range(len(recc)):
+        sor[i] = len(recc[i].ingredients.split(','))
 
+    idxx = sorted(sor, key= lambda x : sor[x])
 
-    print(recc)
-    print(recc[0].image_url)
-               
-    return render(request, 'index.html', {'context':recc, 'lst':lst, 'hate':hate})
+    print(idxx)
+    
+    recc = [recc[i] for i in idxx]
+    print(recc)           
+
+    return render(request, 'index.html', {'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate})
 

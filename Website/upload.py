@@ -22,7 +22,7 @@ from home.models import *
 
 
 
-# ###벌크업데이트
+###벌크업데이트
 
 # CSV_PATH = './final_recipe_df3.csv' 
 
