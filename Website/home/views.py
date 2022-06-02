@@ -13,13 +13,19 @@ import random
 
 # Create your views here.
 def index(request):
-    RECIPE_NUM=8
-    
+    # db에서 불러오기
+    id = Hate_Ingredient.objects.filter(
+        user_id=request.user.id).values('ingredient_id')
+    e = [Ingredient.objects.get(id=i['ingredient_id']) for i in id]
+    hate = [i.ingredients for i in e]
+
+    # 랜덤 레시피
+    RECIPE_NUM = 8
     rand_val = random.randint(0, 10000)
 
-
-    default_recipe = Home.objects.filter().all()[rand_val:rand_val+RECIPE_NUM] # random 8개 
-    return render(request, 'index.html', {"context": default_recipe})
+    default_recipe = Home.objects.filter().all(
+    )[rand_val:rand_val+RECIPE_NUM]  # random 8개
+    return render(request, 'index.html', {"context": default_recipe, 'hate': hate})
 
     
 def ingredientsjson(request):
