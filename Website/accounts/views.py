@@ -74,8 +74,33 @@ def logout(request):
 
 
 def modify(request):
-    if request.method == 'POST' or 'GET':
-        return render(request, 'modify.html')
+    if request.method == 'GET':
+        # db에서 불러오기
+        id = Hate_Ingredient.objects.filter(
+            user_id=request.user.id).values('ingredient_id')
+        e = [Ingredient.objects.get(id=i['ingredient_id']) for i in id]
+        hate = [i.ingredients for i in e]
+        return render(request, 'modify.html', {'hate': hate})
+
+    if request.method == 'POST':
+        # 삭제하기
+        delete_ingre = Hate_Ingredient.objects.filter(user_id=request.user.id)
+        delete_ingre.delete()
+        # 추가하기
+        data = request.POST
+        hate_ingredients = data.get('hate_ingredients')
+        hate_ingredients = json.loads(hate_ingredients)
+        ingrement_list = [item['value'] for item in hate_ingredients]
+        target_ing_objs = Ingredient.objects.filter(
+            ingredients__in=ingrement_list).all()
+
+        hate_ingredients = [Hate_Ingredient(
+            user=request.user,
+            ingredient=ingre_obj
+        ) for ingre_obj in target_ing_objs]
+        Hate_Ingredient.objects.bulk_create(hate_ingredients)
+        return redirect('index')
+
 
 
 
