@@ -7,24 +7,23 @@
 
     {% if error %}
 
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="alert alert-warning" role="alert">
         {{error.message}}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
     {% endif %}
 
     <form action="/accounts/signup/" method="POST">
         {% csrf_token %}
-        Username:
+        아이디:
         <br>
         <input name="username" type="text">
         <br>
-        Password:
+        비밀번호:
         <br>
         <input name="password1" type="password">
         <br>
-        Confirm Password:
+        비밀번호 확인:
         <br>
         <input name="password2" type="password">
         <br><br>
