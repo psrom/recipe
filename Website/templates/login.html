@@ -6,7 +6,7 @@
     <h1>Login</h1>
 
     {% if error %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="alert alert-warning" role="alert">
         {{error.message}}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -14,15 +14,15 @@
     
     <form action="/accounts/login/" method="POST">
         {% csrf_token %}
-        Username:
+        아이디:
         <br>
         <input name="username" type="text">
         <br>
-        Password:
+        비밀번호:
         <br>
         <input name="password" type="password">
         <br><br>
-        <input type="submit" class="btn btn-primary" value="sign in">
+        <input type="submit" class="btn btn-primary" value="로그인">
     </form>
 </div>
 
