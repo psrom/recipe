@@ -22,7 +22,7 @@
                 <div id="p-01" style="border: 1px solid #a5f6c8;">선택한 식재료 궁합도</div>
 
             </form>
-            <p class="font-monospace">선택한 재료들: {{lst}}</p>
+            <p>선택한 재료들: {{lst}}</p>
         </main>
 
 
@@ -30,7 +30,7 @@
             <br>
             <br>
             <h3>&#127869; 레시피를 추천해드려요 </h3>
-            <p class="font-monospace">제외한 재료들: {% for h in hate%}{% if not forloop.first %}, {%endif%}{{h}}{% endfor %}</p>
+            <p>제외한 재료들: {% for h in hate%}{% if not forloop.first %}, {%endif%}{{h}}{% endfor %}</p>
             
             <br>
             <div class="row">
