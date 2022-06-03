@@ -17,6 +17,14 @@ class Home(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def get_ingredients_pre(self):
+        result = self.ingredients_pre[1:-1]
+        result = result.replace("'","")
+        result = result.split(',')
+        result = ", ".join([i.strip() for i in result])
+        return result
+
 class Ingredient(models.Model):
     ingredients = models.TextField()
 
