@@ -12,6 +12,8 @@ import json
 def signup(request):
     if request.method == "POST":
         username = request.POST['username']
+        if not username:
+            return render(request, 'signup.html', {"error": {"message":"아이디, 비밀번호를 입력해주세요."}})
         if User.objects.filter(username=username).all():
             return render(request, 'signup.html', {"error": {"message":"중복된 아이디입니다."}})
 
@@ -43,6 +45,8 @@ def signup_hate(request):
     if request.method == 'POST':
         data =  request.POST
         hate_ingredients = data.get('hate_ingredients')
+        if not hate_ingredients:
+            return redirect('index')
         hate_ingredients = json.loads(hate_ingredients)
         ingrement_list = [item['value'] for item in hate_ingredients]
         target_ing_objs = Ingredient.objects.filter(ingredients__in=ingrement_list).all()
