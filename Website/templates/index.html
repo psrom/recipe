@@ -37,12 +37,13 @@
                 {% for c in context %}
 
                 <div class="col my-3">
-                    <div class="card h-100 " style="width: 18rem;">
+                    <div class="card h-100 " style="width: 18rem; border-radius: 15px;">
                         <img src={{c.image_url}} class="card-img-top" width="150px" height="150px" alt="...">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{c.name}}</h5>
-                            <p class="card-text">{{c.ingredients}}</p>
-                            <a href={{c.url}} class="align-self-end btn btn-primary" style="margin-top: auto;"
+                            <br>
+                            <p class="card-text">{% for i in c.get_ingredients_pre %}{{i}}{% endfor %}</p>
+                            <a href={{c.url}} class="align-self-end btn btn-primary" style="margin-top: auto; width:100%;"
                                 target='_blank'>레시피 보기</a>
                             
                             
