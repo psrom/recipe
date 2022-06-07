@@ -52,9 +52,9 @@
 
               });
 
-        
+       
        });
-
+       
     </script>
 
    
@@ -72,7 +72,7 @@
                 <input type='text' name='input-custom-dropdown' class='some_class_name' placeholder='ex) 돼지고기,소고기...'
                     id='sample'>
                 <div style="line-height:30%;"><br></div>
-                <button type="submit" class="btn btn-primary btn-lg float-end">레시피 추천</button>
+                <button type="submit" class="btn btn-danger btn-lg float-end">레시피 추천</button>
                 <div id="p-01" style="border: 1px solid #FFF;">선택한 식재료 궁합도</div>
 
             </form>
@@ -85,8 +85,9 @@
             <br>
             <h3>&#127869; 레시피를 추천해드려요 </h3>
             <p>제외한 재료들: {% for h in hate%}{% if not forloop.first %}, {%endif%}{{h}}{% endfor %}</p>
-
+            
             <button class="btn btn-primary" value = 'all'>전체보기</button>
+            
             {% for k,v in cate_recipe.items %}
                 <button class="btn btn-primary my-1" value = {{k}}>{{k}}</button>
             {% endfor %} 
@@ -102,7 +103,7 @@
                             <h5 class="card-title">{{c.name}}</h5>
                             <br>
                             <p class="card-text">{% for i in c.get_ingredients_pre %}{{i}}{% endfor %}</p>
-                            <a href={{c.url}} class="align-self-end btn btn-primary" style="margin-top: auto; width:100%;"
+                            <a href={{c.url}} class="align-self-end btn btn-danger" style="margin-top: auto; width:100%;"
                                 target='_blank'>레시피 보기</a>
                             
                             
@@ -124,7 +125,7 @@
                                 <h5 class="card-title">{{c.name}}</h5>
                                 <br>
                                 <p class="card-text">{% for i in c.get_ingredients_pre %}{{i}}{% endfor %}</p>
-                                <a href={{c.url}} class="align-self-end btn btn-primary" style="margin-top: auto; width:100%;"
+                                <a href={{c.url}} class="align-self-end btn btn-danger" style="margin-top: auto; width:100%;"
                                     target='_blank'>레시피 보기</a>
 
 
