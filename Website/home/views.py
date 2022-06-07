@@ -98,7 +98,10 @@ def recipe_rec(request):
 
     new_dic = {i:dic[i] for i in n10}
 
-    categories = set([dic[i] for i in n10])
+    categories = list(set([dic[i] for i in n10]))
+    ex_idx = categories.index('기타')
+    categories[-1], categories[ex_idx] = categories[ex_idx], categories[-1] 
+    print(categories)
 
     dic2 = {i :[] for i in categories}
     
@@ -140,8 +143,4 @@ def recipe_rec(request):
 
     
     print(dic2)
-    
-    return render(request, 'index.html', {'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate, 'cate_recipe': dic2,'cate':categories})
-
-
-
+    return render(request, 'index.html', {'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate, 'cate_recipe': dic2})
