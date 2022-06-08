@@ -22,7 +22,7 @@ class Home(models.Model):
         result = self.ingredients_pre[1:-1]
         result = result.replace("'","")
         result = result.split(',')
-        result = ", ".join([i.strip() for i in result])
+        result = [i.strip() for i in result]
         return result
 
 class Ingredient(models.Model):
