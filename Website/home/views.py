@@ -131,7 +131,7 @@ def recipe_rec(request):
 
    
     recc = [Home.objects.get(id = i+1) for i in n10]
-
+    
     sor = {}
     for i in range(len(recc)):
         sor[i] = len(recc[i].ingredients_pre.split(','))
@@ -140,7 +140,7 @@ def recipe_rec(request):
 
     recc = [recc[i] for i in idxx]
    
-
     
+   
     print(dic2)
     return render(request, 'index.html', {'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate, 'cate_recipe': dic2})
