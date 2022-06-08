@@ -52,7 +52,11 @@
 
               });
 
+        
+           
+           
        
+
        });
        
     </script>
@@ -66,17 +70,17 @@
         {{user}}
         <!-- Begin page content -->
         <main class="flex-shrink-0">
-            <form action="/recipe_rec/" method='get'>
+            <form name = 'recipe' action="/recipe_rec/" method='get'>
                 {% csrf_token %}
 
                 <input type='text' name='input-custom-dropdown' class='some_class_name' placeholder='ex) 돼지고기,소고기...'
-                    id='sample'>
+                    id='sample' value = "">
                 <div style="line-height:30%;"><br></div>
-                <button type="submit" class="btn btn-danger btn-lg float-end">레시피 추천</button>
+                <button id = 'recipe' type="submit" class="btn btn-danger btn-lg float-end">레시피 추천</button>
                 <div id="p-01" style="border: 1px solid #FFF;">선택한 식재료 궁합도</div>
 
             </form>
-            <p>선택한 재료들: {{lst}}</p>
+            <p id = 'lst_text'>{{lst}}</p>
         </main>
 
        
@@ -86,7 +90,7 @@
             <h3>&#127869; 레시피를 추천해드려요 </h3>
             <p>제외한 재료들: {% for h in hate%}{% if not forloop.first %}, {%endif%}{{h}}{% endfor %}</p>
             
-            <button class="btn btn-primary" value = 'all'>전체보기</button>
+            <button id = 'btn_all' class="btn btn-primary" value = 'all'>전체보기</button>
             
             {% for k,v in cate_recipe.items %}
                 <button class="btn btn-primary my-1" value = {{k}}>{{k}}</button>
@@ -151,11 +155,22 @@
             <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
             <script>
+                var lst = $('#lst_text').text();
+                
+                lst = lst.replace('[', '');
+                lst = lst.replace(']', '');
+                lst = lst.replace(' ', '');
+                lst = lst.replace(/\'/g, '');
+                
+                console.log(lst);
+                document.getElementById('sample').value = lst;
+                
+               
                 var input = document.querySelector('input#sample'),
                     // init Tagify script on the above inputs
                     tagify = new Tagify(input, {
                         enforceWhitelist: true,
-                        whitelist: [],
+                        whitelist: lst.split(','),
                         maxTags: 10,
                         dropdown: {
                             maxItems: 20,           // <- mixumum allowed rendered suggestions
@@ -190,7 +205,7 @@
                     console.log(e.detail)
                     
                     
-    
+                    
                     
                     tagify.whitelist = null
                     
