@@ -85,8 +85,9 @@
             <br>
             <h3>&#127869; 레시피를 추천해드려요 </h3>
             <p>제외한 재료들: {% for h in hate%}{% if not forloop.first %}, {%endif%}{{h}}{% endfor %}</p>
-
-            <button id = 'btn_all' class="btn btn-primary" value = 'all'>전체보기</button>
+            {% for a in all %}
+            <button id = 'btn_all' class="btn btn-primary" value = {{a}}>전체보기</button>
+            {% endfor %}
             {% for k,v in cate_recipe.items %}
                 <button class="btn btn-primary my-1" value = {{k}}>{{k}}</button>
             {% endfor %}
@@ -153,6 +154,7 @@
             <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
             <script>
+                
                 var lst = $('#lst_text').text();
 
                 lst = lst.replace('[', '');

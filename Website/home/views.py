@@ -143,4 +143,5 @@ def recipe_rec(request):
     
    
     print(dic2)
-    return render(request, 'index.html', {'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate, 'cate_recipe': dic2})
+    all = {'all':'all'}
+    return render(request, 'index.html', {'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate, 'cate_recipe': dic2, 'all':all})
