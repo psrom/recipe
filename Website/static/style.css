@@ -21,3 +21,6 @@
     background: lightyellow;
     border-color: gold;
 }
+.card-title{
+    min-height:75px;
+}
