@@ -14,6 +14,9 @@ class Home(models.Model):
     tag = models.TextField()
     category = models.TextField()
     bak = models.TextField()
+
+    like_users = models.ManyToManyField(User, related_name='like_recipes', through='accounts.Like_recipe')
+    
     def __str__(self):
         return self.name
 

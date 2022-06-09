@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.serializers import serialize
 from django.http import HttpResponseNotFound
 from regex import D # 404 error
-from .models import Hate_Ingredient
-from home.models import Ingredient
+from .models import *
+from home.models import *
 import json
 
 def signup(request):
@@ -26,7 +26,7 @@ def signup(request):
          
         #return render(request, 'signup_hate.html')
         #return redirect('signup_hate')
-        return redirect('register_hate')
+        return redirect('accounts:register_hate')
     return render(request, 'signup.html')
 
 
@@ -116,3 +116,40 @@ def ingredientsjson(request):
         ingredient = Ingredient.objects.filter(ingredients__startswith=request.GET['ingredient']).all()
 
     return HttpResponse(serialize('json', queryset=ingredient))
+
+def like_recipe(request, like_recipe_pk):
+    
+    print(request)
+    print('-'*10)
+    print(like_recipe_pk)
+    if request.user.is_authenticated:
+        # request.user = 현재 유저
+        # like_recipe_pk = recipe id (Home)
+        # 목적: Like_recipe 추가하는 것
+        print(request.user)
+        print(request.user.id)
+        # 이미 좋아요가 눌려 있는지 (?) => Like_recipe에 ㅇrecipe_id와 user_id가 있는지
+        like_recipe = Like_recipe.objects.filter(user=request.user, recipe_id=like_recipe_pk).all()
+        print(like_recipe)
+        if like_recipe:
+            # 이미 좋아요 눌러져 있음
+            # 좋아요 객체(Like_recipe에 Delete)
+            #    like_recipe = Like_recipe.objects.filter(recipe_id=like_recipe_pk)
+           like_recipe.delete()
+           return HttpResponse(json.dumps({'recipe_id': like_recipe_pk, 'deleted': True}))
+        else:
+            like_recipe_objs = Home.objects.filter(id= like_recipe_pk).all()
+            print(like_recipe_objs)
+            print(Home.objects.all())
+            print('-'*10)
+
+            like_recipe=Like_recipe(user=request.user, recipe= like_recipe_objs[0])
+            print(like_recipe)
+            
+            print('-'*10)
+            Like_recipe.objects.bulk_create([like_recipe])
+            # 좋아요가 눌려있지 않음
+            # 좋아요 객체(Like_recipe에 Insert)
+            print([like_recipe])
+        return HttpResponse(serialize('json', queryset= [like_recipe]))
+    return redirect('accounts:login')
