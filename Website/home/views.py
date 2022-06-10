@@ -138,10 +138,11 @@ def recipe_rec(request):
     idxx = sorted(sor, key= lambda x : sor[x])
     print(idxx)
 
-    recc = [recc[i] for i in idxx]
+    recc_sort = [recc[i] for i in idxx]
    
     
    
     print(dic2)
     all = {'all':'all'}
-    return render(request, 'index.html', {'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate, 'cate_recipe': dic2, 'all':all})
+    all_sort = {'all_sort': 'all_sort'}
+    return render(request, 'index.html', {'context_sort': recc_sort, 'context':recc, 'idxx':idxx, 'lst':lst, 'hate':hate, 'cate_recipe': dic2, 'all':all, 'all_sort':all_sort})
