@@ -75,7 +75,7 @@ def jaccard(lst_s, lst_c):
       for j in i:
         a.append(model.wv.similarity(j,k))
       b = max(a)
-      if b <= 0.4:
+      if b <= 0.5:
         b = 0
       res2 += b
     c = res2/len(lst_s)
@@ -181,13 +181,13 @@ class Ing_rec():
     for i in lst:
       ing_co_matrix2 *= ing_co_matrix[i]
 
-    cc = list(ing_co_matrix2.nlargest(20).index)
+    cc = list(ing_co_matrix2.nlargest(10).index)
     for j in cc:
       for i in ingredients_list.keys():
         if j in ingredients_list[i]:
           rec_dic[i].append(j)
     if len(lst) >=2:      
-      mm = Recipe_rec(lst).cosin_m(n = 50, p = False)      
+      mm = Recipe_rec(lst).cosin_m(n = 100, p = False)      
       lst_c = lst_a[mm]
 
       jac = jaccard(lst, lst_c)
