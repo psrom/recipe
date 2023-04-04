@@ -1,5 +1,5 @@
 # 냉장고를 부탁해
-![슬라이드1](https://user-images.githubusercontent.com/97152657/229798413-8722ac3b-e39f-43f7-8e94-f289cd0b7bb6.PNG)
+![냉장고를 부탁해_최종(주황)](https://user-images.githubusercontent.com/97152657/229798953-7aff17e9-d194-4431-bda9-b0142d481518.png)
 ![슬라이드2](https://user-images.githubusercontent.com/97152657/229798418-76b21177-51a0-4e04-b2b8-634f305f0e6d.PNG)
 ![슬라이드3](https://user-images.githubusercontent.com/97152657/229798259-2ef7b2fa-43b4-4751-958c-980dce8d2b75.PNG)
 ![슬라이드4](https://user-images.githubusercontent.com/97152657/229798271-d51c0705-314e-4488-a4e9-c9e5552b57d0.PNG)
